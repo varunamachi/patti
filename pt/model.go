@@ -12,7 +12,7 @@ const (
 )
 
 type Item struct {
-	ID          int       `json:"id" db:"id"`
+	ID          string    `json:"id" db:"id"`
 	Heading     string    `json:"heading" db:"heading"`
 	Description string    `json:"description" db:"description"`
 	Status      Status    `json:"status" db:"status"`
