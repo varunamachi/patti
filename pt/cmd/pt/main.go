@@ -7,18 +7,20 @@ import (
 	"github.com/varunamachi/patti/pt"
 	"github.com/varunamachi/teak"
 	"github.com/varunamachi/teak/pg"
+
+	_ "github.com/lib/pq"
 )
 
 func main() {
 	app := teak.NewApp(
-		"kmvproxy",
+		"pt",
 		teak.Version{
 			Major: 0,
 			Minor: 0,
 			Patch: 0,
 		},
 		0,
-		"The KMVProxy ETL & Server",
+		"A list server",
 		teak.DefaultAuthenticator,
 		teak.NoOpAuthorizer,
 		pg.NewUserStorage(),
