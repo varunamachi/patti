@@ -2,8 +2,10 @@ package pt
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/varunamachi/teak"
+	"github.com/varunamachi/teak/pg"
 )
 
 func NewModule() *teak.Module {
@@ -66,13 +68,30 @@ var tables = []struct {
 }
 
 func Initialize(gtx context.Context, app *teak.App) (err error) {
-	return nil
+	for _, tab := range tables {
+		_, err = pg.Conn().ExecContext(gtx, tab.query)
+		if err != nil {
+			err = teak.LogErrorX("pt.pg.store", "Failed to create table '%s'",
+				err, tab.name)
+			break
+		}
+	}
+	return err
 }
 
 func Setup(gtx context.Context, app *teak.App) (err error) {
-	return nil
+	return err
 }
 
 func Reset(gtx context.Context, app *teak.App) (err error) {
-	return nil
+	for _, tab := range tables {
+		query := fmt.Sprintf("DELETE FROM %s;", tab.name)
+		_, err = pg.Conn().ExecContext(gtx, query)
+		if err != nil {
+			teak.Error(
+				"t.pg.store", "Failed clear data from %s: %v", tab.name, err)
+			//break??
+		}
+	}
+	return err
 }
