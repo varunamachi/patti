@@ -6,6 +6,11 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+const (
+	taskListDataType = "task_lists"
+	taskDataType     = "tasks"
+)
+
 type Status string
 
 const (
@@ -44,7 +49,7 @@ type TaskItemHandler struct {
 
 //DataType - type of data for which this handler is written
 func (th *TaskItemHandler) DataType() string {
-	return "tasks"
+	return taskDataType
 
 }
 
@@ -105,7 +110,7 @@ type TaskListHandler struct {
 
 //DataType - type of data/table for which this handler is written
 func (th *TaskListHandler) DataType() string {
-	return "tasklists"
+	return taskListDataType
 
 }
 

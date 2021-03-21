@@ -19,6 +19,10 @@ func NewModule() *teak.Module {
 		Initialize:  Initialize,
 		Setup:       Setup,
 		Reset:       Reset,
+		ItemHandlers: []teak.StoredItemHandler{
+			&TaskItemHandler{},
+			&TaskListHandler{},
+		},
 	}
 }
 
