@@ -3,7 +3,9 @@ package pt
 import (
 	"context"
 	"fmt"
+	"time"
 
+	uuid "github.com/satori/go.uuid"
 	"github.com/varunamachi/teak"
 	"github.com/varunamachi/teak/pg"
 )
@@ -35,6 +37,7 @@ var tables = []struct {
 		query: `
 		CREATE TABLE task(
 			id CHAR(32) PRIMARY KEY,
+			user_id VARCHAR(256),
 			heading VARCHAR(256),
 			description TEXT,
 			status CHAR(64),
@@ -49,6 +52,7 @@ var tables = []struct {
 		query: `
 		CREATE TABLE tasklist(
 			id CHAR(32) PRIMARY KEY,
+			user_id VARCHAR(256),
 			heading VARCHAR(256),
 			description TEXT,
 			status CHAR(64),
@@ -80,6 +84,22 @@ func Initialize(gtx context.Context, app *teak.App) (err error) {
 			break
 		}
 	}
+	if err != nil {
+		return err
+	}
+	CreateTaskList(gtx, &TaskList{
+		Item: Item{
+			ID:          uuid.NewV4().String(),
+			Heading:     "Default",
+			Description: "Default task list",
+			Status:      Active,
+			CreatedOn:   time.Now(),
+			CreatedBy:   "",
+			ModifiedOn:  time.Now(),
+			ModifiedBy:  "",
+		},
+		// Tasks: []*Task{},
+	})
 	return err
 }
 

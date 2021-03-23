@@ -12,51 +12,82 @@ const listToTaskQuery = `
 	INSERT INTO task_to_list(list_id, task_id) VALUES($1, $2) 
 `
 const setStatusQuery = `
-	UPDATE %s SET status = $1 WHERE id = $1
+	UPDATE %s SET status = $3 WHERE id = $1 AND user_id =$2
+`
+
+const getAllTasksQuery = `
+
+`
+
+const getAllTaskListQuery = `
+	SELECT * FROM tasklists WHERE user_id = $1
+`
+
+const getActiveTaskListsQuery = `
+	SELECT * FROM tasklist WHERE user_id = $1 AND status = $2
 `
 
 // CreateTask - creates a task in the given task list in the database
-func CreateTask(gtx context.Context, list string, task *Task) error {
+func CreateTask(gtx context.Context, listID string, task *Task) error {
+	if listID == "" {
+		listID = defaultListID
+	}
 	err := teak.GetStore().Create(gtx, taskDataType, task)
 	if err != nil {
 		return teak.LogErrorX("pt.ops",
 			"Failed to create task %s", err, task.ID)
 	}
-	_, err = pg.Conn().ExecContext(gtx, listToTaskQuery, list, task.ID)
+	_, err = pg.Conn().ExecContext(gtx, listToTaskQuery, listID, task.ID)
 	return teak.LogErrorX("pt.ops",
-		"Failed to add task %s to task list %s", err, task.ID, list)
+		"Failed to add task %s to task list %s", err, task.ID, listID)
 }
 
 func CreateTaskList(gtx context.Context, tl *TaskList) error {
 	return teak.GetStore().Create(gtx, taskListDataType, tl)
 }
 
-func SetListStatus(gtx context.Context, itemID string, status Status) error {
+func SetListStatus(
+	gtx context.Context, itemID, userID string, status Status) error {
 	query := fmt.Sprintf(setStatusQuery, taskListDataType)
-	_, err := pg.Conn().ExecContext(gtx, query, itemID, string(status))
+	_, err := pg.Conn().ExecContext(gtx, query, itemID, userID, string(status))
 	return teak.LogErrorX("pt.ops",
 		"Failed status of task list %s to %v", err, itemID, status)
 }
 
-func SetTaskStatus(gtx context.Context, itemID string, status Status) error {
+func SetTaskStatus(
+	gtx context.Context, itemID, userID string, status Status) error {
 	query := fmt.Sprintf(setStatusQuery, taskDataType)
-	_, err := pg.Conn().ExecContext(gtx, query, itemID, string(status))
+	_, err := pg.Conn().ExecContext(gtx, query, itemID, userID, string(status))
 	return teak.LogErrorX("pt.ops",
 		"Failed status of task list %s to %v", err, itemID, status)
 }
 
-func UpdateTask(gtx context.Context, task *Task) error {
-	return nil
-}
+// func UpdateTask(gtx context.Context, task *Task) error {
+// 	return teak.GetStore().Update(gtx, taskDataType, "id", task.ID, task)
+// }
 
-func UpdateTaskList(gtx context.Context, tl *TaskList) error {
-	return nil
-}
+// func UpdateTaskList(gtx context.Context, tl *TaskList) error {
+// 	return teak.GetStore().Update(gtx, taskListDataType, "id", tl.ID, tl)
+// }
 
 func DeleteTask(gtx context.Context, taskID string) error {
-	return nil
+	return teak.GetStore().Delete(gtx, taskDataType, "id", taskID)
 }
 
 func DeleteTaskList(gtx context.Context, tlID string) error {
-	return nil
+	return teak.GetStore().Delete(gtx, taskListDataType, "id", tlID)
+}
+
+func GetAllTaskLists(gtx context.Context, userID string) ([]*TaskList, error) {
+	return nil, nil
+}
+
+func GetActiveTaskLists(
+	gtx context.Context, userID string) ([]*TaskList, error) {
+	return nil, nil
+}
+
+func GetTasks(
+	gtx context.Context, userID, taskListID string) ([]*TaskList, error) {
+	return nil, nil
 }

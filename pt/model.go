@@ -11,6 +11,10 @@ const (
 	taskDataType     = "tasks"
 )
 
+const (
+	defaultListID = "default"
+)
+
 type Status string
 
 const (
@@ -23,6 +27,7 @@ const (
 
 type Item struct {
 	ID          string    `json:"id" db:"id"`
+	UserID      string    `json:"userID" db:"user_id"`
 	Heading     string    `json:"heading" db:"heading"`
 	Description string    `json:"description" db:"description"`
 	Status      Status    `json:"status" db:"status"`
@@ -40,7 +45,7 @@ type Task struct {
 
 type TaskList struct {
 	Item
-	Tasks []*Task `json:"tasks" db:"tasks"`
+	// Tasks []*Task `json:"tasks" db:"tasks"`
 }
 
 //TaskItemHandler - CRUD support for Task data type
@@ -94,6 +99,7 @@ func (th *TaskItemHandler) CreateInstance(by string) interface{} {
 func (th *TaskItemHandler) PropNames() []string {
 	return []string{
 		"id",
+		"user_id",
 		"heading",
 		"description",
 		"status",
@@ -155,6 +161,7 @@ func (th *TaskListHandler) CreateInstance(by string) interface{} {
 func (th *TaskListHandler) PropNames() []string {
 	return []string{
 		"id",
+		"user_id",
 		"heading",
 		"description",
 		"status",
