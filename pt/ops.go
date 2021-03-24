@@ -3,6 +3,7 @@ package pt
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/varunamachi/teak"
 	"github.com/varunamachi/teak/pg"
@@ -30,8 +31,17 @@ const getActiveTaskListsQuery = `
 // CreateTask - creates a task in the given task list in the database
 func CreateTask(gtx context.Context, listID string, task *Task) error {
 	if listID == "" {
+		//TODO
+		// - Check if default list exists for the user
+		// - Create it if it does not exist
 		listID = defaultListID
 	}
+
+	task.CreatedOn = time.Now()
+	task.CreatedBy = task.UserID
+	task.ModifiedOn = time.Now()
+	task.ModifiedBy = task.UserID
+
 	err := teak.GetStore().Create(gtx, taskDataType, task)
 	if err != nil {
 		return teak.LogErrorX("pt.ops",
@@ -43,6 +53,10 @@ func CreateTask(gtx context.Context, listID string, task *Task) error {
 }
 
 func CreateTaskList(gtx context.Context, tl *TaskList) error {
+	tl.CreatedOn = time.Now()
+	tl.CreatedBy = tl.UserID
+	tl.ModifiedOn = time.Now()
+	tl.ModifiedBy = tl.UserID
 	return teak.GetStore().Create(gtx, taskListDataType, tl)
 }
 
@@ -70,11 +84,11 @@ func SetTaskStatus(
 // 	return teak.GetStore().Update(gtx, taskListDataType, "id", tl.ID, tl)
 // }
 
-func DeleteTask(gtx context.Context, taskID string) error {
+func DeleteTask(gtx context.Context, userID, taskID string) error {
 	return teak.GetStore().Delete(gtx, taskDataType, "id", taskID)
 }
 
-func DeleteTaskList(gtx context.Context, tlID string) error {
+func DeleteTaskList(gtx context.Context, userID, tlID string) error {
 	return teak.GetStore().Delete(gtx, taskListDataType, "id", tlID)
 }
 
