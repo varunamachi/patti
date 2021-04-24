@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:2021-04-19-1 #this is for arm image
     depends_on:
       - postgres
     ports:
