@@ -2,8 +2,6 @@ package pt
 
 import (
 	"time"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 const (
@@ -26,7 +24,7 @@ const (
 )
 
 type Item struct {
-	ID          string    `json:"id" db:"id"`
+	ID          uint64    `json:"id" db:"id"`
 	UserID      string    `json:"userID" db:"user_id"`
 	Heading     string    `json:"heading" db:"heading"`
 	Description string    `json:"description" db:"description"`
@@ -85,7 +83,7 @@ func (th *TaskItemHandler) SetModInfo(
 func (th *TaskItemHandler) CreateInstance(by string) interface{} {
 	return &Task{
 		Item: Item{
-			ID:         uuid.NewV4().String(),
+			// ID:         uuid.NewV4().String(),
 			CreatedOn:  time.Now(),
 			CreatedBy:  by,
 			ModifiedOn: time.Now(),
@@ -147,7 +145,7 @@ func (th *TaskListHandler) SetModInfo(
 func (th *TaskListHandler) CreateInstance(by string) interface{} {
 	return &TaskList{
 		Item: Item{
-			ID:         uuid.NewV4().String(),
+			// ID:         uuid.NewV4().String(),
 			CreatedOn:  time.Now(),
 			CreatedBy:  by,
 			ModifiedOn: time.Now(),

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	uuid "github.com/satori/go.uuid"
 	"github.com/varunamachi/teak"
 	"github.com/varunamachi/teak/pg"
 )
@@ -89,7 +88,7 @@ func Initialize(gtx context.Context, app *teak.App) (err error) {
 	}
 	CreateTaskList(gtx, &TaskList{
 		Item: Item{
-			ID:          uuid.NewV4().String(),
+			// ID:          uuid.NewV4().String(),
 			Heading:     "Default",
 			Description: "Default task list",
 			Status:      Active,

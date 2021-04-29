@@ -17,7 +17,9 @@ const setStatusQuery = `
 `
 
 const getAllTasksQuery = `
-
+	SELECT * FROM tasks WHERE task_id IN (
+		SELECT task_id FROM task_to_list WHERE list_id = $1
+	) ORDER BY 
 `
 
 const getAllTaskListQuery = `
@@ -93,15 +95,18 @@ func DeleteTaskList(gtx context.Context, userID, tlID string) error {
 }
 
 func GetAllTaskLists(gtx context.Context, userID string) ([]*TaskList, error) {
+	// NEXT
 	return nil, nil
 }
 
 func GetActiveTaskLists(
 	gtx context.Context, userID string) ([]*TaskList, error) {
+	// NEXT
 	return nil, nil
 }
 
 func GetTasks(
 	gtx context.Context, userID, taskListID string) ([]*TaskList, error) {
+	// NEXT
 	return nil, nil
 }

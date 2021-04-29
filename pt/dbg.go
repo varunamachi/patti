@@ -1,16 +1,32 @@
 package pt
 
-var tasksLists = []TaskList{
-	{
-		Item: Item{
-			UserID:      "default",
-			Heading:     "Task list one",
-			Description: "First task list",
-			Status:      Active,
-		},
-	},
-}
+// var users = []teak.User {
+// 	{
+// 		ID: "one",
+// 		FirstName: "FirstOne",
+// 		LastName: "LastOne",
+// 	}
+// }
 
-func fillData() {
+// var tasksLists = []TaskList{
+// 	{
+// 		Item: Item{
+// 			UserID:      "default",
+// 			Heading:     "Task list one",
+// 			Description: "First task list",
+// 			Status:      Active,
+// 		},
+// 	},
+// }
 
-}
+// func generateUser() {
+
+// }
+
+// func createTaskLists() {
+
+// }
+
+// func createTasks() {
+
+// }
