@@ -39,11 +39,6 @@ func CreateTask(gtx context.Context, listID string, task *Task) error {
 		listID = defaultListID
 	}
 
-	task.CreatedOn = time.Now()
-	task.CreatedBy = task.UserID
-	task.ModifiedOn = time.Now()
-	task.ModifiedBy = task.UserID
-
 	err := teak.GetStore().Create(gtx, taskDataType, task)
 	if err != nil {
 		return teak.LogErrorX("pt.ops",

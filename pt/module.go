@@ -92,11 +92,11 @@ func Initialize(gtx context.Context, app *teak.App) (err error) {
 			Heading:     "Default",
 			Description: "Default task list",
 			Status:      Active,
-			CreatedOn:   time.Now(),
-			CreatedBy:   "",
-			ModifiedOn:  time.Now(),
-			ModifiedBy:  "",
 		},
+		CreatedOn:  time.Now(),
+		CreatedBy:  "",
+		ModifiedOn: time.Now(),
+		ModifiedBy: "",
 		// Tasks: []*Task{},
 	})
 	return err

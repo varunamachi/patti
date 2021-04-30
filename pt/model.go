@@ -24,15 +24,10 @@ const (
 )
 
 type Item struct {
-	ID          uint64    `json:"id" db:"id"`
-	UserID      string    `json:"userID" db:"user_id"`
-	Heading     string    `json:"heading" db:"heading"`
-	Description string    `json:"description" db:"description"`
-	Status      Status    `json:"status" db:"status"`
-	CreatedOn   time.Time `json:"createdOn" db:"created_on"`
-	CreatedBy   string    `json:"createdBy" db:"created_by"`
-	ModifiedOn  time.Time `json:"modifiedOn" db:"modified_on"`
-	ModifiedBy  string    `json:"modifiedBy" db:"modified_by"`
+	ID          uint64 `json:"id" db:"id"`
+	Heading     string `json:"heading" db:"heading"`
+	Description string `json:"description" db:"description"`
+	Status      Status `json:"status" db:"status"`
 }
 
 // TaskItem - represents a todo item
@@ -43,7 +38,11 @@ type Task struct {
 
 type TaskList struct {
 	Item
-	// Tasks []*Task `json:"tasks" db:"tasks"`
+	UserID     string    `json:"userID" db:"user_id"`
+	CreatedOn  time.Time `json:"createdOn" db:"created_on"`
+	CreatedBy  string    `json:"createdBy" db:"created_by"`
+	ModifiedOn time.Time `json:"modifiedOn" db:"modified_on"`
+	ModifiedBy string    `json:"modifiedBy" db:"modified_by"`
 }
 
 //TaskItemHandler - CRUD support for Task data type
@@ -72,10 +71,11 @@ func (th *TaskItemHandler) GetKey(item interface{}) interface{} {
 //SetModInfo - set the modifincation information for the data
 func (th *TaskItemHandler) SetModInfo(
 	item interface{}, at time.Time, by string) {
-	if agent, ok := item.(Task); ok {
-		agent.ModifiedOn = at
-		agent.ModifiedBy = by
-	}
+	// if agent, ok := item.(Task); ok {
+	// 	agent.ModifiedOn = at
+	// 	agent.ModifiedBy = by
+	// }
+	// Nothing to do here
 }
 
 //CreateInstance - create instance of the data type for which the handler is
@@ -83,12 +83,7 @@ func (th *TaskItemHandler) SetModInfo(
 func (th *TaskItemHandler) CreateInstance(by string) interface{} {
 	return &Task{
 		Item: Item{
-			// ID:         uuid.NewV4().String(),
-			CreatedOn:  time.Now(),
-			CreatedBy:  by,
-			ModifiedOn: time.Now(),
-			ModifiedBy: by,
-			Status:     Disabled,
+			Status: Disabled,
 		},
 	}
 }
@@ -134,7 +129,7 @@ func (th *TaskListHandler) GetKey(item interface{}) interface{} {
 //SetModInfo - set the modifincation information for the data
 func (th *TaskListHandler) SetModInfo(
 	item interface{}, at time.Time, by string) {
-	if tlist, ok := item.(Task); ok {
+	if tlist, ok := item.(TaskList); ok {
 		tlist.ModifiedOn = at
 		tlist.ModifiedBy = by
 	}
@@ -146,12 +141,12 @@ func (th *TaskListHandler) CreateInstance(by string) interface{} {
 	return &TaskList{
 		Item: Item{
 			// ID:         uuid.NewV4().String(),
-			CreatedOn:  time.Now(),
-			CreatedBy:  by,
-			ModifiedOn: time.Now(),
-			ModifiedBy: by,
-			Status:     Disabled,
+			Status: Disabled,
 		},
+		CreatedOn:  time.Now(),
+		CreatedBy:  by,
+		ModifiedOn: time.Now(),
+		ModifiedBy: by,
 	}
 }
 
