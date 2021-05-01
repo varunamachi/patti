@@ -1,14 +1,16 @@
 package dbg
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
 
+	"github.com/varunamachi/patti/pt"
 	"github.com/varunamachi/teak"
 )
 
-func generateUsers() []*teak.User {
+func generateUsers(handle func(user *teak.User) error) error {
 
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
@@ -32,7 +34,6 @@ func generateUsers() []*teak.User {
 		return "Chief Wizard"
 	}
 
-	users := make([]*teak.User, 0, 100)
 	for i := 0; i < 100; i++ {
 		num := ToStrNum(i)
 		id := "user_" + num.ID
@@ -54,13 +55,39 @@ func generateUsers() []*teak.User {
 			VerfiedAt:  time.Now(),
 			Props:      teak.M{},
 		}
-		users = append(users, &user)
+		if err := handle(&user); err != nil {
+			return teak.LogError("pt.gen", err)
+
+		}
 	}
-	return users
+	return nil
 }
 
-func generateTaskList() {
+func generateTaskList(handler func(tl *pt.TaskList) error) error {
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
 
+	for i := 0; i < 200; i++ {
+		userID := fmt.Sprintf("user_%d", r1.Intn(100))
+		num := ToStrNum(i)
+		tl := pt.TaskList{
+			Item: pt.Item{
+				Heading:     num.Name,
+				Description: num.Name + num.Name,
+				Status:      pt.Active,
+			},
+			UserID:     userID,
+			CreatedOn:  time.Now(),
+			CreatedBy:  userID,
+			ModifiedOn: time.Now(),
+			ModifiedBy: userID,
+		}
+		if err := handler(&tl); err != nil {
+			teak.LogError("pt.gen", err)
+			break
+		}
+	}
+	return nil
 }
 
 // func createTasks() {
